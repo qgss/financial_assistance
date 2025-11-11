@@ -52,8 +52,9 @@ info_collector/
 [
   {
     "url": "https://example.com/page1",    // 必需：目标网页URL
-    "username": "user1",                    // 可选：HTTP基本认证用户名
-    "password": "pass1",                    // 可选：HTTP基本认证密码
+    "cookie": "session_id=abc123; token=xyz789",  // 可选：Cookie字符串，优先于username/password
+    "username": "user1",                    // 可选：HTTP基本认证用户名（当无cookie时使用）
+    "password": "pass1",                    // 可选：HTTP基本认证密码（当无cookie时使用）
     "description": "示例网页1"              // 可选：描述信息
   },
   {
@@ -61,6 +62,11 @@ info_collector/
     "username": "user2",
     "password": "pass2",
     "description": "示例网页2"
+  },
+  {
+    "url": "https://example.com/page3",
+    "cookie": "auth_token=def456",
+    "description": "使用Cookie认证的示例网页"
   }
 ]
 ```
@@ -68,9 +74,12 @@ info_collector/
 ### 字段说明
 
 - **url** (必需): 要访问的网页地址，支持http和https协议
-- **username** (可选): 如果网页需要HTTP基本认证，提供用户名
-- **password** (可选): 如果网页需要HTTP基本认证，提供密码
+- **cookie** (可选): Cookie字符串，用于身份认证。当提供cookie时，将优先使用cookie进行访问，忽略username和password字段
+- **username** (可选): 如果网页需要HTTP基本认证且未提供cookie，提供用户名
+- **password** (可选): 如果网页需要HTTP基本认证且未提供cookie，提供密码
 - **description** (可选): 该URL的描述信息，用于日志输出
+
+**认证优先级**: cookie > username/password（当存在cookie时，username和password将被忽略）
 
 ## 使用方法
 

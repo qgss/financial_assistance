@@ -19,7 +19,7 @@ def load_request_map(json_path: str) -> List[Dict]:
         json_path: JSON文件路径
         
     返回:
-        包含URL配置信息的列表，每个元素包含url、username、password等字段
+        包含URL配置信息的列表，每个元素包含url、cookie、username、password等字段
     """
     # 检查文件是否存在
     if not os.path.exists(json_path):
@@ -48,7 +48,8 @@ def load_request_map(json_path: str) -> List[Dict]:
         return []
 
 
-def get_page_text(url: str, username: Optional[str] = None, 
+def get_page_text(url: str, cookie: Optional[str] = None,
+                  username: Optional[str] = None, 
                   password: Optional[str] = None, 
                   timeout: int = 10) -> Optional[str]:
     """
@@ -56,8 +57,9 @@ def get_page_text(url: str, username: Optional[str] = None,
     
     参数:
         url: 目标网页URL
-        username: 用户名（可选，用于基本认证）
-        password: 密码（可选，用于基本认证）
+        cookie: Cookie字符串（可选，优先于username/password使用）
+        username: 用户名（可选，用于基本认证，当无cookie时使用）
+        password: 密码（可选，用于基本认证，当无cookie时使用）
         timeout: 请求超时时间（秒）
         
     返回:
@@ -72,13 +74,19 @@ def get_page_text(url: str, username: Optional[str] = None,
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         
-        # 如果提供了用户名和密码，使用基本认证
-        auth = None
-        if username and password:
+        # 认证优先级：cookie > username/password
+        # 如果提供了cookie，使用cookie进行认证
+        if cookie:
+            headers['Cookie'] = cookie
+            auth = None
+        # 如果提供了用户名和密码且没有cookie，使用基本认证
+        elif username and password:
             auth = (username, password)
+        else:
+            auth = None
         
         # 发送GET请求
-        response = session.get(url, headers=headers, auth=auth, timeout=timeout)
+        response = session.post(url, headers=headers, auth=auth, timeout=timeout)
         
         # 检查响应状态码
         response.raise_for_status()
@@ -190,6 +198,7 @@ def crawl_pages(json_path: str = "request_map.json",
     # 循环处理每个URL
     for index, config in enumerate(url_list, 1):
         url = config.get('url', '')
+        cookie = config.get('cookie', None)
         username = config.get('username', None)
         password = config.get('password', None)
         description = config.get('description', '')
@@ -203,8 +212,8 @@ def crawl_pages(json_path: str = "request_map.json",
         if description:
             print(f"  描述：{description}")
         
-        # 提取网页文字
-        text = get_page_text(url, username, password)
+        # 提取网页文字（优先使用cookie，否则使用username/password）
+        text = get_page_text(url, cookie=cookie, username=username, password=password)
         
         if text:
             # 保存到文件

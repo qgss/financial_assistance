@@ -1,0 +1,41 @@
+如何读懂机构持仓？
+以下以Berkshire Hathaway发布的最新13F表格中详细股票投资信息表为例介绍机构持仓信息：
+
+Berkshire Hathaway 13F 3
+Berkshire Hathaway 13F 4
+在信息表中，从左至右一共设有八个列选项：
+
+Column 1：NAME OF ISSUER
+NAME OF ISSURER，即机构所投资的符合“第13(f)节证券”的股票发行公司名称，同一家公司会因为不同的投资者组合而出现多次。
+
+Column 2：TITLE OF CLASS
+TITLE OF CLASS 指的是持仓证劵的类型，通常有普通股 (Common stock “SH”)、本金（principal amount “PRN”）看跌 / 看涨期权 (put / call option),、美国存托凭证 (American Depositary Receipts，简称 ADRs)、可转换债券(Convertible Debenture) 等几种类型。该表中的“COM” 即为普通股票。
+
+Column 3：CUSIP
+指的是股票发行公司的CUSIP代码，与美国证监会发布的所有需要披露的证列表代码一致。
+
+Column 4：VALUE
+指的是机构在13F表格对应季度末时，持有股票所对应的总市值。
+
+Column 5：SHRS OR SH
+指的是机构在13F表格对应季度末时持有的证劵数量。
+
+Column 6：INVESTMENT DISCRETION
+Investment Discretion 指的是机构进行证劵买卖的决定权。在这一栏中，通常会有三个类别：
+
+SOLE: 指的是证劵买卖单一决定权，也就是说，提交13F的机构对于当前这只证劵的买卖具有完全的决定权；
+DFND: 是 Shared Defined 的简写，指的是提交13F的投资机构与其它机构投资经理共同决定证劵的买卖，这些其它的机构必需列举在 13F表格中，在之后的Column 7 中，就列举了相应的其它机构的名称；
+OTR: 是 Shared Other的简写，指的是，不同于 Shared Defined 的情况。
+Column 7：OTHER MANAGER
+在Column 6中，如果证券买卖的决定权是由提交13F的投资机构与其它机构投资经理共同决定的，那么在第7栏里，就需要注明其它机构投资经理的名字。
+
+在这一栏目中的数字对应于Berkshire Hathaway 公司13F表格综述页面中的“List of Other Included Managers ”
+
+Berkshire Hathaway 13F 5
+Column 8：VOTING AUTHORITY
+Voting Authority 指的是机构投资经理对于所持有的证劵、所相应拥有的投票权类型。在 Voting Authority 这一列中，主要提供三种类别：
+
+SOLE: 具有对公司重要决策的投票权，比如有争议的董事选举、合并、出售重大资产、影响股东的公司章程变更、基本投资政策的变更等。如果在Column 6中的Investment Dicretion选择的是“DFND”，那么在Colunn 8中，应该填写“SOLE”；
+SHARED: 具有对公司重要决策的投票权，与其它机构投资人共享；
+NONE: 没有重要决策投票权，或仅对日常事务有投票权，这里的日常事务包括会计师的选择、董事的无争议选举、年度报告的批准等。
+从Berkshire Hathaway发布的13F表格中可以看到，其持有的所有股票几乎全是“SOLE”类型，即拥有的这些证劵给予了持仓机构参与非日常事务投票的权利。
