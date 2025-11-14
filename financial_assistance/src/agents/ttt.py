@@ -6,23 +6,26 @@ client = OpenAI(
     base_url="https://api-inference.modelscope.cn/v1"  # ModelScope API基础URL
 )
 
-
-def generate_messages(user_query: str) -> list:
+def generate_messages(user_query: str) -> str:
     """
-    生成用于调用LLM的消息列表
+    生成用于调用LLM的消息列表并获取响应
     
     参数:
         user_query: 用户的查询内容（字符串）
     
     返回:
-        list: 消息列表，包含system和user角色的消息
-             格式: [{'role': 'system', 'content': '...'}, {'role': 'user', 'content': '...'}]
+        str: LLM返回的响应内容
     """
     # 构建消息列表
     messages = [
         {
             'role': 'system',  # 系统角色消息
-            'content': 'You are a helpful assistant.'  # 系统提示内容
+            'content': """You are a helpful assistant that can help me analyze the industry and find the next big thing.
+你需要输出一些搜索关键字，这些关键字的长度不能超过10个字符，要包含行业背景和具体产业，例如"电池"需要包含新能源汽车的行业北京，所以关键字为新能源汽车电池发展或新能源汽车电池技术。
+输出格式为json的list格式，如
+```json
+["关键词1", "关键词2", "关键词3"]
+```"""  # 系统提示内容
         },
         {
             'role': 'user',  # 用户角色消息
@@ -30,9 +33,8 @@ def generate_messages(user_query: str) -> list:
         }
     ]
     
-    # 返回消息列表
-    return messages
-
+    # 调用LLM并返回响应
+    return call_llm(messages)
 
 def call_llm(messages: list) -> str:
     """
@@ -65,3 +67,6 @@ def call_llm(messages: list) -> str:
     
     # 返回完整的响应内容
     return full_content
+
+if __name__ == "__main__":
+    print(generate_messages("针对当下的热门产业新能源汽车，你需要指出该行业所涉及的产业，分析出接下来需要重点发展突破的产业"))
