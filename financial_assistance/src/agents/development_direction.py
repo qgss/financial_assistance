@@ -1,11 +1,5 @@
-from multiprocessing import Pool
-from pathlib import Path
-
-import pandas as pd
-
 from financial_assistance.src.utils.call_llm import call_llm
 from financial_assistance.src.utils.load_config import CURRENT_PROJECT
-from financial_assistance.src.utils.safe_load_json import safe_load_json_from_str
 
 
 def summary_development_direction(industry: str, industry_chain_info: str = "") -> str:
@@ -45,6 +39,8 @@ def summary_development_direction(industry: str, industry_chain_info: str = "") 
 
 def summary_one_industry_chain(industry: str, industry_chains: list):
     # 准备模型输入
+    if not industry_chains:
+        return "信息缺失，无法分析。"
     industry_chain_info = ""
     for i, industry_chain in enumerate(industry_chains):
         if len(industry_chain_info) > CURRENT_PROJECT["max_token"]:
@@ -53,4 +49,4 @@ def summary_one_industry_chain(industry: str, industry_chains: list):
         content = industry_chain['content']
         industry_chain_info += f"# 当前第{i}篇信息：\n{title}\n{content}\n"
     result = summary_development_direction(industry, industry_chain_info)
-    return result
+    return industry, result
