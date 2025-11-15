@@ -1,4 +1,13 @@
+import json
+import random
+import time
+import urllib
+from urllib import parse
+import pandas as pd
+
 from financial_assistance.src.utils.call_llm import call_llm
+from financial_assistance.src.utils.request.simple_spider import request_page_by_selenium
+
 
 def analyze_industry_chain(industry: str) -> str:
     """
@@ -27,7 +36,93 @@ def analyze_industry_chain(industry: str) -> str:
     # 调用LLM并返回响应
     return call_llm(messages)
 
+def search_industry_info_tool(industry: str) -> str:
+    """
+    使用request 或其他互联网搜索工具搜索行业信息
+    
+    参数:
+        industry: 待搜索的行业名称（字符串）
+    
+    返回:
+        str: LLM返回的行业信息
+    """
 
-if __name__ == "__main__":
-    print(analyze_industry_chain("新能源汽车"))
+
+def search_toutiao_with_selenium(industry):
+    """
+    使用 Selenium 模拟浏览器访问今日头条搜索页，返回页面内容
+    """
+    print(f"[search_toutiao_with_selenium] 开始执行今日头条搜索（使用Selenium）")
+    # 将industry转换为url编码
+    industry_url = urllib.parse.quote(industry)
+    payload = f"dvpf=pc&source=input&keyword={industry_url}&page_num=0&pd=synthesis"
+    base_url = "https://so.toutiao.com/search?"
+    url = base_url + payload
+    print(f"[search_toutiao_with_selenium] 目标URL: {url}")
+
+    data_list = []
+
+    print(f"[search_toutiao_with_selenium] 正在请求页面...")
+    result = request_page_by_selenium(url)
+    print(f"[search_toutiao_with_selenium] 正在查找JSON数据脚本标签...")
+    result = result.find_all("script", {"data-for": "s-result-json"})
+    print(f"[search_toutiao_with_selenium] 找到 {len(result)} 个JSON脚本标签")
+    try:
+        for i, s in enumerate(result):
+            print(f"[search_toutiao_with_selenium] 正在解析第 {i + 1} 个JSON数据...")
+            data_list.append(json.loads(s.next))
+        print(f"[search_toutiao_with_selenium] 成功解析 {len(data_list)} 条数据")
+    except Exception as e:
+        print(f"[search_toutiao_with_selenium] 解析JSON时发生错误: {e}")
+    print(f"[search_toutiao_with_selenium] 执行完成，返回 {len(data_list)} 条数据")
+    return data_list
+
+
+def download_pages(data_list):
+    print(f"[download_pages] 开始下载页面，共 {len(data_list)} 条数据需要处理")
+    result_dict_list = []
+    for idx, data in enumerate(data_list, 1):
+        print(f"[download_pages] 正在处理第 {idx}/{len(data_list)} 条数据...")
+        if "data" in data and "open_url" in data["data"]:
+            cur_data = data["data"]
+            open_url = cur_data["open_url"]
+            title = cur_data["title"]
+            print(f"[download_pages] 标题: {title}")
+            print(f"[download_pages] URL: {open_url}")
+            # 进行一个3-10s的随机时间sleep
+            sleep_time = random.randint(3, 10)
+            print(f"[download_pages] 随机等待 {sleep_time} 秒...")
+            time.sleep(sleep_time)
+            print(f"[download_pages] 开始下载页面内容...")
+            result = request_page_by_selenium(open_url)
+            print(f"[download_pages] 正在查找文章内容...")
+            contents = result.find_all("div", {"class": "article-content"})
+            print(f"[download_pages] 找到 {len(contents)} 个文章内容块")
+            for i, content in enumerate(contents):
+                cur = {
+                    "title": title,
+                    "content": content.text,
+                }
+                result_dict_list.append(cur)
+            print(f"[download_pages] 第 {idx} 条数据处理完成，已提取 {len(contents)} 个内容块")
+        else:
+            print(f"[download_pages] 警告：第 {idx} 条数据中 open_url 不存在，跳过")
+    print(f"[download_pages] 所有页面下载完成，共提取 {len(result_dict_list)} 条内容")
+    df = pd.DataFrame(result_dict_list)
+    print(f"[download_pages] 已转换为DataFrame，形状: {df.shape}")
+    return df
+
+
+# 示例用法（请根据实际情况修改下面的参数）
+if __name__ == '__main__':
+    industry = "动力电池回收"
+    result_list = search_toutiao_with_selenium(industry)
+    with open("request_result.json", "w") as f:
+        json.dump(result_list, f)
+    with open("request_result.json", "r") as f:
+        data = json.load(f)
+    df = download_pages(data)
+    df.to_csv(f"{industry}_request_result.csv", index=False)
+    print()
+
 
