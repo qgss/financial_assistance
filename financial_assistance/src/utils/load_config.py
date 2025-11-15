@@ -5,7 +5,7 @@ import yaml
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 获取config目录以及project_config.yaml文件的路径
-CONFIG_PATH = os.path.join(CURRENT_DIR, "..", "config", "project_config.yaml")
+CONFIG_PATH = os.path.join(CURRENT_DIR, "..", "..", "config", "project_config.yaml")
 
 def load_yaml_config(path):
     with open(path, "r", encoding="utf-8") as f:

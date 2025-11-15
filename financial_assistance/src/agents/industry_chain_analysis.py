@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import time
 import urllib
@@ -36,16 +37,27 @@ def analyze_industry_chain(industry: str) -> str:
     # 调用LLM并返回响应
     return call_llm(messages)
 
-def search_industry_info_tool(industry: str) -> str:
+def search_industry_info_tool(industry: str, output_dir="") -> tuple:
     """
     使用request 或其他互联网搜索工具搜索行业信息
-    
+
     参数:
         industry: 待搜索的行业名称（字符串）
-    
+
     返回:
         str: LLM返回的行业信息
     """
+    time.sleep(random.randint(1,20))
+    result_list = search_toutiao_with_selenium(industry)
+    if output_dir:
+        with open(os.path.join(output_dir, f"{industry}_request_result.json"), "w") as f:
+            json.dump(result_list, f)
+    dict_list = download_pages(result_list, industry)
+    if output_dir:
+        df = pd.DataFrame(dict_list)
+        print(f"[download_pages] 已转换为DataFrame，形状: {df.shape}")
+        df.to_csv(os.path.join(output_dir, f"{industry}_request_result.csv"), index=False)
+    return industry, dict_list
 
 
 def search_toutiao_with_selenium(industry):
@@ -78,7 +90,7 @@ def search_toutiao_with_selenium(industry):
     return data_list
 
 
-def download_pages(data_list):
+def download_pages(data_list, industry):
     print(f"[download_pages] 开始下载页面，共 {len(data_list)} 条数据需要处理")
     result_dict_list = []
     for idx, data in enumerate(data_list, 1):
@@ -108,21 +120,7 @@ def download_pages(data_list):
         else:
             print(f"[download_pages] 警告：第 {idx} 条数据中 open_url 不存在，跳过")
     print(f"[download_pages] 所有页面下载完成，共提取 {len(result_dict_list)} 条内容")
-    df = pd.DataFrame(result_dict_list)
-    print(f"[download_pages] 已转换为DataFrame，形状: {df.shape}")
-    return df
+    return result_dict_list
 
-
-# 示例用法（请根据实际情况修改下面的参数）
-if __name__ == '__main__':
-    industry = "动力电池回收"
-    result_list = search_toutiao_with_selenium(industry)
-    with open("request_result.json", "w") as f:
-        json.dump(result_list, f)
-    with open("request_result.json", "r") as f:
-        data = json.load(f)
-    df = download_pages(data)
-    df.to_csv(f"{industry}_request_result.csv", index=False)
-    print()
 
 
