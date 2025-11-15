@@ -31,7 +31,7 @@ def search_toutiao_once(headers):
 
 def request_page_by_selenium(url):
     print(f"[request_page_by_selenium] 开始执行，目标URL: {url}")
-    print(f"[request_page_by_selenium] 正在初始化Edge浏览器（无头模式）...")
+    print(f"[request_page_by_selenium] 正在初始化Edge浏览器...")
     edge_options = Options()
     # edge_options.add_argument('--headless')
     edge_options.add_argument('--disable-gpu')
