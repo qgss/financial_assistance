@@ -32,6 +32,8 @@ def cookie_manager(url, manual_cookie: str = None):
         print(f"[cookie_manager] 检测到手动cookie，正在保存...")
         save_manual_cookie(url, cookie_file_path, manual_cookie)
         return cookie_file_path
+    if os.path.exists(cookie_file_path) and is_cookie_valid(cookie_file_path):
+        return cookie_file_path
     return None
     #
     # # 如果没有提供手动cookie，检查现有cookie是否有效
