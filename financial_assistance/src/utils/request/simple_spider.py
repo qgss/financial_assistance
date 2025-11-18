@@ -440,42 +440,12 @@ def request_page_by_selenium(url, cookie_file_path=None, headless=False):
 
 
 if __name__ == '__main__':
-    # 使用示例
-    
-    # 示例1: 手动登录并保存cookie
-    # 首次使用时，调用此函数进行登录并保存cookie
-    # login_url = "https://seekingalpha.com/market-news"
-    # cookie_file = "cookies/seeking_alpha_cookies.json"
-    # save_cookies_after_login(login_url, cookie_file, wait_time=60)  # 等待60秒，在此期间手动登录
-    
-    # 示例2: 检查cookie是否有效
-    # cookie_file = "cookies/seeking_alpha_cookies.json"
-    # if is_cookie_valid(cookie_file):
-    #     print("Cookie有效")
-    # else:
-    #     print("Cookie无效或已过期，需要重新登录")
-    
-    # 示例3: 使用cookie自动登录并获取页面
-    # target_url = "https://seekingalpha.com/market-news"
-    # cookie_file = "cookies/seeking_alpha_cookies.json"
-    # soup = request_page_by_selenium(target_url, cookie_file_path=cookie_file, headless=True)
-    # if soup:
-    #     print("页面获取成功")
-    #     # 处理页面内容...
-    
-    # 示例4: 直接获取带cookie的driver对象（更灵活的控制）
-    # target_url = "https://seekingalpha.com/market-news"
-    # cookie_file = "cookies/seeking_alpha_cookies.json"
-    # driver = get_driver_with_cookies(target_url, cookie_file, headless=True)
-    # if driver:
-    #     # 使用driver进行操作
-    #     driver.get("https://seekingalpha.com/article/xxx")
-    #     # ... 其他操作
-    #     driver.quit()
-    
+    url = "https://so.toutiao.com/search?dvpf=pc&source=search_subtab_switch&keyword=%E6%90%9C%E7%B4%A2&pd=information&action_type=search_subtab_switch&page_num=0&search_id=&from=news&cur_tab_title=news"
+    cookie = """tt_webid=7572579517837149736; ttcid=5727e84c5a77462bb9835236555432dd36; local_city_cache=%E8%8B%8F%E5%B7%9E; csrftoken=c85338b5f678f87cbbf7f409fb57b4a7; _ga=GA1.1.876125235.1763128574; s_v_web_id=verify_mhyx8dbs_9ftjGYJk_0td4_4N8A_B2hz_M263g2uDyRTF; _S_DPR=1.5; _S_IPAD=0; notRedShot=1; gfkadpd=24,6457; _ga_QEHZPBE5HH=GS2.1.s1763395123$o10$g0$t1763395123$j60$l0$h0; passport_csrf_token=714c2b470f21ab1b3c37dbc1c4f956da; passport_csrf_token_default=714c2b470f21ab1b3c37dbc1c4f956da; passport_mfa_token=CjQA13r8RL311hGuag8N3qCGYtDGuU4V03D%2BjP1T5E89ywnoYEB5EPGmXm8Si50o9JH6SQP3GkoKPAAAAAAAAAAAAABPumK296fuItkvMhdj5v6XZmJHHVc1XVjhojE9maSlE2Zqd0DUC0L1sDUHbebPONSCshCo8oEOGPax0WwgAiIBA61cDYA%3D; d_ticket=7dc52cfa0e17aade0fe25d27b706d8039615b; n_mh=RpgsamB0nplRzqGsl5j2eOop-JNLImreL6J_LJhZB1E; sso_auth_status=5beb36bd7e1a7f2281448bf5013c2f42; sso_auth_status_ss=5beb36bd7e1a7f2281448bf5013c2f42; sso_uid_tt=78bef385fb9d5eb3028a1601b71ab4bb; sso_uid_tt_ss=78bef385fb9d5eb3028a1601b71ab4bb; toutiao_sso_user=423a4742828cde3fa45d9d7c7c550515; toutiao_sso_user_ss=423a4742828cde3fa45d9d7c7c550515; sid_ucp_sso_v1=1.0.0-KDQyYzQ1NDRhNTdlOGEzZmJkN2UyMDZiNjg0YTVlNjdjZDBlY2NjZTcKGwjSsLCZYBDKiPLIBhgYIA4wtOzVvQU4AkDxBxoCaGwiIDQyM2E0NzQyODI4Y2RlM2ZhNDVkOWQ3YzdjNTUwNTE1; ssid_ucp_sso_v1=1.0.0-KDQyYzQ1NDRhNTdlOGEzZmJkN2UyMDZiNjg0YTVlNjdjZDBlY2NjZTcKGwjSsLCZYBDKiPLIBhgYIA4wtOzVvQU4AkDxBxoCaGwiIDQyM2E0NzQyODI4Y2RlM2ZhNDVkOWQ3YzdjNTUwNTE1; passport_auth_status=9af224da4d3477ce20b5d9cc7b727076%2Cfca9d62eace2f3cfd71a35eec76002f3; passport_auth_status_ss=9af224da4d3477ce20b5d9cc7b727076%2Cfca9d62eace2f3cfd71a35eec76002f3; sid_guard=c15f08467cb5ba3d223f74dfb2214781%7C1763476554%7C5184002%7CSat%2C+17-Jan-2026+14%3A35%3A56+GMT; uid_tt=8a414d367a4aa8922a9b3d9599e876e5; uid_tt_ss=8a414d367a4aa8922a9b3d9599e876e5; sid_tt=c15f08467cb5ba3d223f74dfb2214781; sessionid=c15f08467cb5ba3d223f74dfb2214781; sessionid_ss=c15f08467cb5ba3d223f74dfb2214781; session_tlb_tag=sttt%7C8%7CwV8IRny1uj0iP3TfsiFHgf________-xL_2I6cQgUcb2yIc1l8msGsxFJXliMh0XM3fK7LRIrVM%3D; session_tlb_tag_bk=sttt%7C8%7CwV8IRny1uj0iP3TfsiFHgf________-xL_2I6cQgUcb2yIc1l8msGsxFJXliMh0XM3fK7LRIrVM%3D; is_staff_user=false; sid_ucp_v1=1.0.0-KGJjMmFkZWQ5ZGJiZDdhMjk5NWYyOWZkODFjZmVkY2FlNzFkZDRiNDEKFQjSsLCZYBDKiPLIBhgYIA44AkDxBxoCbHEiIGMxNWYwODQ2N2NiNWJhM2QyMjNmNzRkZmIyMjE0Nzgx; ssid_ucp_v1=1.0.0-KGJjMmFkZWQ5ZGJiZDdhMjk5NWYyOWZkODFjZmVkY2FlNzFkZDRiNDEKFQjSsLCZYBDKiPLIBhgYIA44AkDxBxoCbHEiIGMxNWYwODQ2N2NiNWJhM2QyMjNmNzRkZmIyMjE0Nzgx; odin_tt=7510b59acb8f234b6726beba76f21d2a142a7aa84f1e1396798539c78134c93bc50a5082b98895affbeda855eb4c371f; _S_WIN_WH=1912_1044; ttwid=1%7CbIAgNjPDB0fbc5MF3rZ9pi3biUeyC0Cojklh-SIlP4s%7C1763477479%7Ca7c8c89405eb811af5c6bdaba38c4249db310f51e8aa4df7bc95e70413db2227; tt_anti_token=wtCN60yKLcU-5d1f09915fd1914311d2cde18cbe6a3b98452b5114635ba176c668d6d8ca51be; tt_scid=lLpDCc8.U369e6u.Che3s8mn3ynhwkLXkMwiQ8zvpJcrnrHdLQhlipEbWXt6g.hI121d"""
+    cookie_manager(url, cookie)
+
     # 测试代码
-    url = "https://seekingalpha.com/news/4522989-verrica-targets-european-expansion-for-ycanth-as-phase-iii-programs-advance-and-sales-force"
-    aa = request_page_by_selenium(url)
-    print()
-    # print(extract_base_url_from_url(url))
+    # url = "https://seekingalpha.com/news/4522989-verrica-targets-european-expansion-for-ycanth-as-phase-iii-programs-advance-and-sales-force"
+    # aa = request_page_by_selenium(url)
+    # print()
 
