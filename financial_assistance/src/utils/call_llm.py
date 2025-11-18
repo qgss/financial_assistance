@@ -38,7 +38,7 @@ def generate_messages(user_query: str) -> list:
     messages = [
         {
             'role': 'system',  # 系统角色消息
-            'content': '请帮我用中文markdown格式总结归纳'  # 系统提示内容You are a helpful assistant.
+            'content': 'You are a helpful assistant.'  # 系统提示内容You are a helpful assistant.
         },
         {
             'role': 'user',  # 用户角色消息
