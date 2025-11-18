@@ -1,8 +1,15 @@
+import datetime
 import json
+import os
+import random
+import time
 
+import pandas as pd
+
+from financial_assistance.src.utils.load_config import PROJECT_ROOT_DIR
 from financial_assistance.src.utils.request.simple_spider import request_page_by_selenium
 
-def get_seeking_alpha_news(news_num_limit=10):
+def get_seeking_alpha_news(news_num_limit=10, output_dir="", keyword=""):
     request_url = "https://seekingalpha.com/api/v3/news?fields[news]=title%2Cdate%2Ccomment_count%2Ccontent%2CprimaryTickers%2CsecondaryTickers%2Ctag%2CgettyImageUrl%2CpublishOn&fields[tag]=slug%2Cname&filter[category]=market-news%3A%3Aall&filter[since]=0&filter[until]=0&include=primaryTickers%2CsecondaryTickers&isMounting=true&page[size]=25&page[number]=1"
 
     news_list = request_page_by_selenium(request_url)
@@ -29,26 +36,42 @@ def get_seeking_alpha_news(news_num_limit=10):
                     break
             except Exception as e:
                 print(f"在取数据 {str(item)} 时遇到 {str(e)} 的故障")
+    if output_dir:
+        if not keyword:
+            keyword = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        output_dir = os.path.join(output_dir, f'seeking_alpha_ori_news_link_{keyword}.json')
+        with open(output_dir, 'w') as f:
+            json.dump(json_data, f, ensure_ascii=False, indent=4)
     return news_dict_list
 
 
-def download_seeking_pages(news_list):
+def download_seeking_pages(news_list, output_dir="", keyword=""):
     base_url = "https://seekingalpha.com"
     download_result = []
     for item in news_list:
         url = base_url + item["self"]
         response_str = "网页搜索无法返回任何有效结果。"
+        time.sleep(random.randint(3, 7))
         try:
             response = request_page_by_selenium(url)
             response_str = response.text
         except Exception as e:
             print(f"在下载 {url} 时遇到 {str(e)} 的故障")
         cur_new = {
-            "title": item["attributes"]["title"],
+            "title": item["title"],
             "content": response_str,
-            "date": item["attributes"]["publishOn"],
+            "date": item["date"],
+            "url":url
         }
         download_result.append(cur_new)
+        print(f"完成{cur_new['title']}的下载")
+    print(f"总共收取到{len(download_result)}篇新闻报道")
+    if output_dir:
+        if not keyword:
+            keyword = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        output_dir = os.path.join(output_dir, f'seeking_alpha_ori_news_link_{keyword}.csv')
+        df = pd.DataFrame(download_result)
+        df.to_csv(output_dir, index=False)
     return download_result
 
 
