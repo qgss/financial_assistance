@@ -385,7 +385,7 @@ def get_driver_with_cookies(url, cookie_file_path, headless=True, auto_login=Tru
         return None
 
 
-def request_page_by_selenium(url, cookie_file_path=None, headless=True):
+def request_page_by_selenium(url, cookie_file_path=None, headless=False):
     """
     使用Selenium请求页面并返回BeautifulSoup对象
     
@@ -422,7 +422,7 @@ def request_page_by_selenium(url, cookie_file_path=None, headless=True):
             driver.get(url)
         
         print(f"[request_page_by_selenium] 等待页面动态加载（2秒）...")
-        time.sleep(2)  # 等待页面动态加载内容
+        time.sleep(15)  # 等待页面动态加载内容
         print(f"[request_page_by_selenium] 正在获取页面源码...")
         page_source = driver.page_source
         print(f"[request_page_by_selenium] 正在解析页面内容...")
