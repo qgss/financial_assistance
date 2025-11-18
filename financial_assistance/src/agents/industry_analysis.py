@@ -24,7 +24,8 @@ def analysis_keywords(user_query: str) -> list:
         {
             'role': 'system',  # 系统角色消息
             'content': """You are a helpful assistant that can help me analyze the industry and find the next big thing.
-你需要输出一些搜索关键字，这些关键字的长度不能超过10个字符，要包含行业背景和具体产业，例如"电池"需要包含新能源汽车的行业北京，所以关键字为新能源汽车电池发展或新能源汽车电池技术。
+你需要输出一些搜索关键字，这些关键字的长度不能超过15个字符，要包含行业背景和具体产业，例如"电池"需要包含新能源汽车的行业背景，所以关键字为新能源汽车电池发展或新能源汽车电池技术。
+如果是纯名词关键字，请加上xxx的发展前景，以增加搜索相关度
 输出格式为json的格式，如
 ```json
 {"keyword": ["关键词1", "关键词2", "关键词3"]}

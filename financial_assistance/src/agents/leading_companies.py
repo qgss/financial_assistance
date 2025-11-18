@@ -1,6 +1,10 @@
+from financial_assistance.src.utils.call_baidu_search import search_by_baidu_web_search
 from financial_assistance.src.utils.call_llm import call_llm
+from financial_assistance.src.utils.load_config import CURRENT_PROJECT
+from financial_assistance.src.utils.safe_load_json import safe_load_json_from_str
 
-def find_leading_companies(industry: str, industry_chain_info: str = "") -> str:
+
+def find_leading_companies(industry: str, industry_chain_info: str = "") -> list:
     """
     找出相关行业龙头企业
     
@@ -22,8 +26,11 @@ def find_leading_companies(industry: str, industry_chain_info: str = "") -> str:
         {
             'role': 'system',  # 系统角色消息
             'content': """You are a helpful assistant that can help me find leading companies in industries.
-你需要找出指定行业相关的龙头企业，包括公司名称、主营业务、市场地位、技术优势等信息。
-输出格式为结构化的文本或JSON格式，清晰展示各个龙头企业的情况。"""  # 系统提示内容
+你需要找出指定行业相关的龙头企业的公司名称，注意，请不要包含除公司名称意外的其他描述。
+输出格式为json:
+{
+    companies: ["公司名称1", "公司名称2", "公司名称3", ...]
+}"""  # 系统提示内容
         },
         {
             'role': 'user',  # 用户角色消息
@@ -32,9 +39,22 @@ def find_leading_companies(industry: str, industry_chain_info: str = "") -> str:
     ]
     
     # 调用LLM并返回响应
-    return call_llm(messages)
+    companies_str = call_llm(messages)
+    companies = safe_load_json_from_str(companies_str).get("companies", [])
+    return companies
+
+
+def search_and_output_leading_companies(industry: str, industry_chain_info: str = ""):
+    if not industry_chain_info:
+        industry_chain_info = "相关报道信息：\n"
+        industry_chain_infos = search_by_baidu_web_search(f"{industry}相关龙头企业有哪些")
+        for industry_chain in industry_chain_infos:
+            if len(industry_chain_info) > CURRENT_PROJECT["max_token"]:
+                break
+            industry_chain_info += f"{industry_chain['title']}: {industry_chain['content']}\n\n"
+    return find_leading_companies(industry, industry_chain_info)
 
 
 if __name__ == "__main__":
-    print(find_leading_companies("新能源汽车"))
+    print(search_and_output_leading_companies("AI计算卡"))
 

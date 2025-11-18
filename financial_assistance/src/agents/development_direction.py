@@ -40,7 +40,7 @@ def summary_development_direction(industry: str, industry_chain_info: str = "") 
 def summary_one_industry_chain(industry: str, industry_chains: list):
     # 准备模型输入
     if not industry_chains:
-        return "信息缺失，无法分析。"
+        return industry, "信息缺失，无法分析。"
     industry_chain_info = ""
     for i, industry_chain in enumerate(industry_chains):
         if len(industry_chain_info) > CURRENT_PROJECT["max_token"]:
