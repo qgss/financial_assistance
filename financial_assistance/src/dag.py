@@ -1,9 +1,6 @@
 import datetime
 import os
 from multiprocessing import Pool
-from pathlib import Path
-
-import pandas as pd
 
 from financial_assistance.src.agents.development_direction import summary_one_industry_chain
 from financial_assistance.src.agents.industry_analysis import analysis_keywords
@@ -17,7 +14,7 @@ def analyze_one_industry_chain(industry: str, output_dir=""):
 def analysis_industry(idea):
     root_dir = os.path.dirname(__file__)
     cur_date = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = os.path.join(root_dir, "..", "res", cur_date)
+    output_dir = os.path.join(root_dir, "..", "res", "industry", cur_date)
     os.makedirs(output_dir, exist_ok=True)
 
     industries_keywords = analysis_keywords(idea)
@@ -47,4 +44,4 @@ def analysis_industry(idea):
         print()
 
 if __name__ == '__main__':
-    analysis_industry("请帮我分析一下 数通网络（AI训练集群网络） 的相关产业信息")
+    analysis_industry("请帮我分析一下 白银 的产业发展行情")
